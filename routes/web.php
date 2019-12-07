@@ -11,11 +11,25 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return view('main', ['name' => 'James']);
+$router->get('/', function () {
+    return view('page.home');
 });
 
-Log::debug('привет');
+$router->post('/domains', [
+    'as' => 'domains.store', 'uses' => 'DomainController@store'
+]);
+
+$router->get('/domains/{id}', [
+    'as' => 'domains.show', 'uses' => 'DomainController@show'
+]);
+
+#Route::post('/domains', 'DomainController@store')
+    #->name('domains.store');
+
+#Route::post('/domains/{id}', 'DomainController@show')
+    #->name('domains.show');
+
+#Log::debug('привет');
 /*
 $router->get('/', function () use ($router) {
     return $router->app->version();

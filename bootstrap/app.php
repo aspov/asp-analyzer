@@ -46,9 +46,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-if (env('APP_DEBUG')) {
- $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
-}
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -78,6 +75,13 @@ if (env('APP_DEBUG')) {
 | totally optional, so you are not required to uncomment this line.
 |
 */
+if (env('APP_DEBUG')) {
+    $app->register(Barryvdh\Debugbar\LumenServiceProvider::class);
+}
+
+if (class_exists('Laravel\Tinker\TinkerServiceProvider')) {
+    $app->register(Laravel\Tinker\TinkerServiceProvider::class);
+}
 
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
@@ -97,7 +101,7 @@ if (env('APP_DEBUG')) {
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;

@@ -1,9 +1,7 @@
 #!/usr/bin/env php
 <?php
-
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
-
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -14,9 +12,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 | is ready to receive HTTP / Console requests from the environment.
 |
 */
-
 $app = require __DIR__.'/bootstrap/app.php';
-
 /*
 |--------------------------------------------------------------------------
 | Run The Artisan Application
@@ -27,9 +23,7 @@ $app = require __DIR__.'/bootstrap/app.php';
 | or another output device for the developers. Here goes nothing!
 |
 */
-
 $kernel = $app->make(
     'Illuminate\Contracts\Console\Kernel'
 );
-
 exit($kernel->handle(new ArgvInput, new ConsoleOutput));
