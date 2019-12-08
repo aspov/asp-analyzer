@@ -31,6 +31,11 @@ class ApplicationTest extends TestCase
 
     public function testDomainShow()
     {
+        \DB::table('domains')->insert([
+            'name' => $request->name,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+            ]);
         #$response = $this->get(route('domains.show'), ['id' => 1]);
         $response = $this->call('GET', route('domains.show', ['id' => 1]));
         $this->assertResponseOk();
