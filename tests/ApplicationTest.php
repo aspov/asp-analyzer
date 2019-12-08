@@ -32,7 +32,7 @@ class ApplicationTest extends TestCase
     public function testDomainShow()
     {
         \DB::table('domains')->insert([
-            'name' => $request->name,
+            'name' => 'name',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
             ]);
