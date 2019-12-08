@@ -22,16 +22,3 @@ $router->post('/domains', [
 $router->get('/domains/{id}', [
     'as' => 'domains.show', 'uses' => 'DomainController@show'
 ]);
-
-#Route::post('/domains', 'DomainController@store')
-    #->name('domains.store');
-
-#Route::post('/domains/{id}', 'DomainController@show')
-    #->name('domains.show');
-
-#Log::debug('привет');
-/*
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-*/

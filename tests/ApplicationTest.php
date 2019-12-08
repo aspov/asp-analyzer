@@ -7,7 +7,7 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class ApplicationTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseTransactions;
     
     /**
      * A basic test example.
@@ -16,6 +16,7 @@ class ApplicationTest extends TestCase
      */
     public function testMainPage()
     {
+        print_r(\DB::getDatabaseName());
         $this->get('/');
         #print_r(\DB::getSchemaBuilder()->getColumnListing('domains'));
         $this->assertResponseOk();
@@ -24,17 +25,14 @@ class ApplicationTest extends TestCase
     public function testDomainPost()
     {
         $name = ['name' => 'ya'];
-        
-        #$response = $this->post(route('domains.store'), $name);
-        
-        $response = $this->call('POST', '/domains', $name);
-        
+        $response = $this->post(route('domains.store'), $name);
+        $response->seeInDatabase('domains', $name);
+    }
 
-        $this->assertEquals(200, $response->status());
-        #$response->assertStatus(302);
-
-        #$this->assertDatabaseHas('domains', [
-            #'name' => 'ya'
-        #]);
+    public function testDomainShow()
+    {
+        #$response = $this->get(route('domains.show'), ['id' => 1]);
+        $response = $this->call('GET', route('domains.show', ['id' => 1]));
+        $this->assertResponseOk();
     }
 }
