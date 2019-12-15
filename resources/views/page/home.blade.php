@@ -11,7 +11,7 @@
       <label for="inputAddress" class="sr-only">address</label>
       <input type="text" class="form-control" id="inputAddress" name="name" placeholder="<?= htmlspecialchars($domain ?? 'enter the address') ?>">
     </div>
-    <button type="submit" class="btn btn-secondary mb-2">Аnalyze</button>
+    <button type="submit" class="btn btn-primary mb-2">Аnalyze</button>
   </form>  
 </div>
 @endsection

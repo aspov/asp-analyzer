@@ -22,7 +22,7 @@
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="/domains">Domains</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,6 +50,8 @@
 <div>
   @yield('content')
 </div>
+
+
 
 <!-- Подключаем jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

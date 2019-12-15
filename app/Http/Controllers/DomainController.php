@@ -7,10 +7,15 @@ use Illuminate\Http\Request;
 
 class DomainController extends Controller
 {
+    public function index(Request $request)
+    {
+        $domains = \DB::table('domains')->paginate(2);
+        #$domain = \DB::table('domains')->find($id);
+        return view('domain.index', ['domains' => $domains]);
+    }
+
     public function store(Request $request)
     {
-        
-        
         $this->validate($request, [
             'name' => 'required'
         ]);

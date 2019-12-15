@@ -36,8 +36,18 @@ class ApplicationTest extends TestCase
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
             ]);
-        #$response = $this->get(route('domains.show'), ['id' => 1]);
         $response = $this->call('GET', route('domains.show', ['id' => 1]));
+        $this->assertResponseOk();
+    }
+
+    public function testDomainsIndex()
+    {
+        $domain = \DB::table('domains')->insert([
+            'name' => 'name',
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+            ]);
+        $response = $this->call('GET', route('domains.index', ['id' => 1]));
         $this->assertResponseOk();
     }
 }

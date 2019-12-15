@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     <tr> 
-      <td>{{$domain->name}}</td>
+      <td>{{ $domain->name }}</td>
     </tr>   
   </tbody>
 </table>
