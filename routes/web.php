@@ -12,7 +12,11 @@
 */
 
 $router->get('/', function () {
-    return view('page.home');
+    return view('page.welcome');
+});
+
+$router->get('/main', function () {
+    return view('page.main', ['error' => '']);
 });
 
 $router->get('/domains', [

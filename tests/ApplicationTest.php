@@ -4,6 +4,7 @@ namespace Tests;
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
+use Tests\TestClient;
 
 class ApplicationTest extends TestCase
 {
@@ -24,30 +25,35 @@ class ApplicationTest extends TestCase
 
     public function testDomainPost()
     {
-        $name = ['name' => 'ya'];
-        $response = $this->post(route('domains.store'), $name);
-        $response->seeInDatabase('domains', $name);
+        $domain = ['name' => 'google.com'];
+        $testClient = new TestClient($domain);
+        
+        $this->app->bind('GuzzleHttp\ClientInterface', function () use ($testClient) {
+            return $testClient;
+        });
+
+        $response = $this->post(route('domains.store'), $domain);
+        $response->seeInDatabase('domains', $domain);
+        $this->assertResponseStatus(302);
     }
 
     public function testDomainShow()
     {
         \DB::table('domains')->insert([
-            'name' => 'name',
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
+            'name' => 'testNameShow'
             ]);
         $response = $this->call('GET', route('domains.show', ['id' => 1]));
         $this->assertResponseOk();
+        $this->assertStringContainsString('testNameShow', $response->content());
     }
 
     public function testDomainsIndex()
     {
         $domain = \DB::table('domains')->insert([
-            'name' => 'name',
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
+            'name' => 'testNameIndex'
             ]);
         $response = $this->call('GET', route('domains.index', ['id' => 1]));
         $this->assertResponseOk();
+        $this->assertStringContainsString('testNameIndex', $response->content());
     }
 }

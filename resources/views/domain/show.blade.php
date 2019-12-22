@@ -1,15 +1,19 @@
 @extends('layouts.app')
 @section('content')
-<table class="table">
-  <thead>
-    <tr>      
-      <th scope="col">Name</th>      
-    </tr>
-  </thead>
-  <tbody>
-    <tr> 
+<table class="table"> 
+  <tbody>  
+    <tr>
+      <th scope="row">Domain</th>
       <td>{{ $domain->name }}</td>
-    </tr>   
+    </tr>
+    <tr>
+      <th scope="row">Status</th>
+      <td>{{ $domain->status_code }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Body</th>
+      <td>{{ $domain->body }}</td>
+    </tr>
   </tbody>
 </table>
 @endsection

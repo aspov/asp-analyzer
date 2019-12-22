@@ -1,5 +1,6 @@
 @extends('layouts.app')
-
+@section('homeActive', '')
+@section('domainsActive', '')
 @section('content')
 <div class="jumbotron">
   <h1>Welcome!</h1>
@@ -9,9 +10,8 @@
     <input name="_token" type="hidden">            
     <div class="form-group mb-2">
       <label for="inputAddress" class="sr-only">address</label>
-      <input type="text" class="form-control" id="inputAddress" name="name" placeholder="<?= htmlspecialchars($domain ?? 'enter the address') ?>">
+      <input type="text" class="form-control" id="inputAddress" name="name" placeholder="enter the address" value = "<?= htmlspecialchars($domain ?? "") ?>">
     </div>
     <button type="submit" class="btn btn-primary mb-2">Аnalyze</button>
   </form>  
-</div>
 @endsection
