@@ -28,7 +28,7 @@ class DomainController extends Controller
                 'name' => 'required'
             ]);
         
-            $response = $this->client->request('GET', $request->name);
+            $response = $this->client->request('GET', $request->name, ['charset' => 'UTF-8']);
             $statusCode = $response->getStatusCode();
             $headers = $response->getHeaders();
             $contentLength = array_key_exists('content-length', $headers) ? $headers['content-length'] : null;

@@ -26,11 +26,11 @@ class ApplicationTest extends TestCase
     public function testDomainPost()
     {
         $domain = ['name' => 'google.com'];
-        $testClient = new TestClient($domain);
+        #$testClient = new TestClient($domain);
         
-        $this->app->bind('GuzzleHttp\ClientInterface', function () use ($testClient) {
-            return $testClient;
-        });
+        #$this->app->bind('GuzzleHttp\ClientInterface', function () use ($testClient) {
+            #return $testClient;
+        #});
 
         $response = $this->post(route('domains.store'), $domain);
         $response->seeInDatabase('domains', $domain);
