@@ -33,8 +33,7 @@ class DomainController extends Controller
             $headers = $response->getHeaders();
             $contentLength = array_key_exists('content-length', $headers) ? $headers['content-length'] : null;
             $body = $response->getBody()->getContents();
-            $utf8Body = mb_convert_encoding($body, 'UTF-8');
-            print_r($utf8Body);
+            $utf8Body = mb_convert_encoding($lastName, 'UTF-8', 'Windows-1252');
         } catch (\Exception $e) {
             return view('page.main', ['domain' => $request->name, 'error' => $e->getMessage()]);
         }
