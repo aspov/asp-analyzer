@@ -45,7 +45,7 @@ class DomainController extends Controller
                 'updated_at' => date("Y-m-d H:i:s"),
                 'status_code' => $statusCode,
                 'content_length' => $contentLength,
-                'body' => $body
+                'body' => $utf8Body
                 ]);
         } else {
             \DB::table('domains')
@@ -54,7 +54,7 @@ class DomainController extends Controller
                 'updated_at' => date("Y-m-d H:i:s"),
                 'status_code' => $statusCode,
                 'content_length' => $contentLength,
-                'body' => $body
+                'body' => $utf8Body
               ]);
         };
 
