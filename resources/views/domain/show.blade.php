@@ -28,6 +28,12 @@
       <td>{{ $domain->description }}</td>
     </tr>
     @endif
+    @if ( $domain->heading )
+    <tr>
+      <th scope="row">Heading</th>
+      <td>{{ $domain->heading }}</td>
+    </tr>
+    @endif
   </tbody>
 </table>
 @endsection

@@ -32,7 +32,7 @@ class DomainController extends Controller
             $headers = $response->getHeaders();
             $contentLength = array_key_exists('Content-Length', $headers) ? $headers['Content-Length'][0] : null;
             $body = $response->getBody()->getContents();
-            $utf8Body = iconv(mb_detect_encoding($body), "UTF-8//TRANSLIT", $body);
+            $utf8Body = iconv(mb_detect_encoding(utf8_encode($body)), "UTF-8//TRANSLIT", $body);
             $document = new Document($utf8Body);
             if ($document->has('meta[name="keywords"]')) {
                 $keywords = $document->find('meta[name="keywords"]')[0]->attr('content');
@@ -46,7 +46,7 @@ class DomainController extends Controller
         } catch (\Exception $e) {
             return view('page.main', ['domain' => $request->name, 'error' => $e->getMessage()]);
         }
-
+        #print_r(mb_detect_encoding(iconv("UTF-8", "ISO-8859-1", utf8_encode($description ?? null))));
         if (\DB::table('domains')->where('name', $request->name)->doesntExist()) {
             \DB::table('domains')->insert([
                 'name' => $request->name,
@@ -69,7 +69,7 @@ class DomainController extends Controller
                 'body' => $utf8Body,
                 'keywords' => $keywords ?? null,
                 'description' => $description ?? null,
-                'heading' => $heading ?? null
+                'heading' => $heading ?? null,
               ]);
         };
 
