@@ -15,7 +15,10 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('GuzzleHttp\ClientInterface', function () {
-            return new Client();
+            #return new Client();
+            return new Client([
+                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded', 'charset' => 'UTF-8']
+                ]);
         });
     }
 }
