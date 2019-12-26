@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Psr\Http\Message\RequestInterface;
@@ -8,7 +9,10 @@ class TestClient implements \GuzzleHttp\ClientInterface
     private $domain;
     private $statusCode = 200;
     private $contentLength = [999];
-    private $body = "test body";
+    private $body = "test body 
+    <meta name=\"keywords\" content=\"test_keyword\">
+    <meta name=\"description\" content=\"test_description\">
+    <h1>test_h1<\h1>";
 
     public function __construct($domain)
     {
@@ -58,6 +62,6 @@ class TestClient implements \GuzzleHttp\ClientInterface
 
     public function getHeaders()
     {
-        return ['content_length' => $this->contentLength];
+        return ['Content-Length' => $this->contentLength];
     }
 }

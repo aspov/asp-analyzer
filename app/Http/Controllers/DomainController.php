@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
+use DiDom\Document;
 
 class DomainController extends Controller
 {
@@ -27,13 +27,22 @@ class DomainController extends Controller
             $this->validate($request, [
                 'name' => 'required'
             ]);
-        
             $response = $this->client->request('GET', $request->name);
             $statusCode = $response->getStatusCode();
             $headers = $response->getHeaders();
-            $contentLength = array_key_exists('content-length', $headers) ? $headers['content-length'] : null;
+            $contentLength = array_key_exists('Content-Length', $headers) ? $headers['Content-Length'][0] : null;
             $body = $response->getBody()->getContents();
-            $utf8Body = utf8_encode($body);
+            $utf8Body = iconv(mb_detect_encoding($body), "UTF-8", $body);
+            $document = new Document($utf8Body);
+            if ($document->has('meta[name="keywords"]')) {
+                $keywords = $document->find('meta[name="keywords"]')[0]->attr('content');
+            }
+            if ($document->has('meta[name="description"]')) {
+                $description = $document->find('meta[name="description"]')[0]->attr('content');
+            }
+            if ($document->has('h1')) {
+                $heading = $document->find('h1')[0]->text();
+            }
         } catch (\Exception $e) {
             return view('page.main', ['domain' => $request->name, 'error' => $e->getMessage()]);
         }
@@ -45,7 +54,10 @@ class DomainController extends Controller
                 'updated_at' => date("Y-m-d H:i:s"),
                 'status_code' => $statusCode,
                 'content_length' => $contentLength,
-                'body' => $utf8Body
+                'body' => $utf8Body,
+                'keywords' => $keywords ?? null,
+                'description' => $description ?? null,
+                'heading' => $heading ?? null
                 ]);
         } else {
             \DB::table('domains')
@@ -54,12 +66,14 @@ class DomainController extends Controller
                 'updated_at' => date("Y-m-d H:i:s"),
                 'status_code' => $statusCode,
                 'content_length' => $contentLength,
-                'body' => $utf8Body
+                'body' => $utf8Body,
+                'keywords' => $keywords ?? null,
+                'description' => $description ?? null,
+                'heading' => $heading ?? null
               ]);
         };
 
         $domain = \DB::table('domains')->where('name', $request->name)->first();
-
         return redirect()
             ->route('domains.show', ['id' => $domain->id]);
     }
