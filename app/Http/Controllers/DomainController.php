@@ -32,7 +32,7 @@ class DomainController extends Controller
             $headers = $response->getHeaders();
             $contentLength = array_key_exists('Content-Length', $headers) ? $headers['Content-Length'][0] : null;
             $body = $response->getBody()->getContents();
-            $utf8Body = iconv("UTF-8", "UTF-8//TRANSLIT", $body);
+            $utf8Body = iconv(utf8_encode($body), "UTF-8//TRANSLIT", $body);
             $document = new Document($utf8Body);
             if ($document->has('meta[name="keywords"]')) {
                 $keywords = $document->find('meta[name="keywords"]')[0]->attr('content');
