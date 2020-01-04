@@ -34,15 +34,9 @@ class DomainController extends Controller
             $body = $response->getBody()->getContents();
             $utf8Body = iconv(mb_detect_encoding($body), "UTF-8//TRANSLIT", $body);
             $document = new Document($utf8Body);
-            if ($document->has('meta[name="keywords"]')) {
-                $keywords = $document->find('meta[name="keywords"]')[0]->attr('content');
-            }
-            if ($document->has('meta[name="description"]')) {
-                $description = $document->find('meta[name="description"]')[0]->attr('content');
-            }
-            if ($document->has('h1')) {
-                $heading = $document->find('h1')[0]->text();
-            }
+            $keywords = $document->find('meta[name="keywords"]');
+            $description = $document->find('meta[name="description"]');
+            $heading = $document->find('h1');
         } catch (\Exception $e) {
             return view('page.main', ['domain' => $request->name, 'error' => $e->getMessage()]);
         }
@@ -54,9 +48,9 @@ class DomainController extends Controller
                 'status_code' => $statusCode,
                 'content_length' => $contentLength,
                 'body' => $utf8Body,
-                'keywords' => $keywords ?? null,
-                'description' => $description ?? null,
-                'heading' => $heading ?? null
+                'keywords' => $keywords ? $keywords[0]->attr('content') : null,
+                'description' => $description ? $description[0]->attr('content') : null,
+                'heading' => $heading ? $heading[0]->text() : null
                 ]);
         } else {
             \DB::table('domains')
@@ -66,9 +60,9 @@ class DomainController extends Controller
                 'status_code' => $statusCode,
                 'content_length' => $contentLength,
                 'body' => $utf8Body,
-                'keywords' => $keywords ?? null,
-                'description' => $description ?? null,
-                'heading' => $heading ?? null,
+                'keywords' => $keywords ? $keywords[0]->attr('content') : null,
+                'description' => $description ? $description[0]->attr('content') : null,
+                'heading' => $heading ? $heading[0]->text() : null
               ]);
         };
 
@@ -79,7 +73,15 @@ class DomainController extends Controller
 
     public function show(Request $request, $id)
     {
-        $domain = \DB::table('domains')->find($id);
+        try {
+            //findOrFail работает только с Eloquent, его нужно было использовать?
+            $domain = \DB::table('domains')->find($id);
+            if (!$domain) {
+                throw new \Exception('404 Page Not Found');
+            }
+        } catch (\Exception $e) {
+            return view('page.main', ['error' => $e->getMessage()]);
+        }
         return view('domain.show', ['domain' => $domain]);
     }
 }
