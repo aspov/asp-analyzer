@@ -15,7 +15,7 @@ $router->get('/', ['as' => 'page.welcome', function () {
     return view('page.welcome');
 }]);
 
-$router->get('/main', ['as' => 'page.main', function () {
+$router->get('/', ['as' => 'page.main', function () {
     return view('page.main', ['error' => '']);
 }]);
 

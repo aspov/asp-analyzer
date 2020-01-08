@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use DiDom\Document;
+use App\Domain;
 
 class DomainController extends Controller
 {
@@ -17,16 +18,14 @@ class DomainController extends Controller
 
     public function index(Request $request)
     {
-        $domains = \DB::table('domains')->paginate(2);
+        $domains =  Domain::paginate(2);
         return view('domain.index', ['domains' => $domains]);
     }
 
     public function store(Request $request)
     {
         try {
-            $this->validate($request, [
-                'name' => 'required'
-            ]);
+            $this->validate($request, ['name' => 'required']);
             $response = $this->client->request('GET', $request->name);
             $statusCode = $response->getStatusCode();
             $headers = $response->getHeaders();
@@ -40,45 +39,22 @@ class DomainController extends Controller
         } catch (\Exception $e) {
             return view('page.main', ['domain' => $request->name, 'error' => $e->getMessage()]);
         }
-        if (\DB::table('domains')->where('name', $request->name)->doesntExist()) {
-            \DB::table('domains')->insert([
-                'name' => $request->name,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s"),
-                'status_code' => $statusCode,
-                'content_length' => $contentLength,
-                'body' => $utf8Body,
-                'keywords' => $keywords ? $keywords[0]->attr('content') : null,
-                'description' => $description ? $description[0]->attr('content') : null,
-                'heading' => $heading ? $heading[0]->text() : null
-                ]);
-        } else {
-            \DB::table('domains')
-              ->where('name', $request->name)
-              ->update([
-                'updated_at' => date("Y-m-d H:i:s"),
-                'status_code' => $statusCode,
-                'content_length' => $contentLength,
-                'body' => $utf8Body,
-                'keywords' => $keywords ? $keywords[0]->attr('content') : null,
-                'description' => $description ? $description[0]->attr('content') : null,
-                'heading' => $heading ? $heading[0]->text() : null
-              ]);
-        };
-
-        $domain = \DB::table('domains')->where('name', $request->name)->first();
-        return redirect()
-            ->route('domains.show', ['id' => $domain->id]);
+        $domain = Domain::where('name', $request->name)->first() ?? new Domain();
+        $domain->name = $request->name;
+        $domain->status_code = $statusCode;
+        $domain->content_length = $contentLength;
+        $domain->body = $utf8Body;
+        $domain->keywords = $keywords ? $keywords[0]->attr('content') : null;
+        $domain->description = $description ? $description[0]->attr('content') : null;
+        $domain->heading = $heading ? $heading[0]->text() : null;
+        $domain->save();
+        return redirect()->route('domains.show', ['id' => $domain->id]);
     }
 
     public function show(Request $request, $id)
     {
         try {
-            //findOrFail работает только с Eloquent, его нужно было использовать?
-            $domain = \DB::table('domains')->find($id);
-            if (!$domain) {
-                throw new \Exception('404 Page Not Found');
-            }
+            $domain = Domain::findOrFail($id);
         } catch (\Exception $e) {
             return view('page.main', ['error' => $e->getMessage()]);
         }

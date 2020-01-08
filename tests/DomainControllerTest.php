@@ -5,6 +5,7 @@ namespace Tests;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use Tests\TestClient;
+use App\Domain;
 
 class DomainControllerTest extends TestCase
 {
@@ -12,42 +13,33 @@ class DomainControllerTest extends TestCase
   
     public function testIndex()
     {
-        $faker = \Faker\Factory::create();
-        $domainName = $faker->domainName;
-        \DB::table('domains')->insert(['name' => $domainName]);
-        $response = $this->get(route('domains.index', ['id' => 1]));
-        $response->seeInDatabase('domains', ['name' => $domainName]);
+        $domain = factory(Domain::class)->make();
+        $domain->save();
+        $testDomain = Domain::where('name', $domain->name)->first();
+        $response = $this->get(route('domains.index', ['id' => $testDomain->id]));
         $this->assertResponseOk();
+        $response->seeInDatabase('domains', ['name' => $domain->name]);
     }
 
     public function testStore()
     {
-        $faker = \Faker\Factory::create();
-        $domain = [
-            'name' => $faker->domainName,
-            'body' =>
-                "<meta name=\"keywords\" content=\"{$faker->words($nb = 3, $asText = true)}\">" .
-                "<meta name=\"description\" content=\"{$faker->text($maxNbChars = 200)}\">" .
-                "<h1>{$faker->paragraph()}</h1>"
-        ];
-        
-        $testClient = new TestClient($domain);
+        $domain = factory(Domain::class)->make();
+        $testClient = new TestClient($domain->body);
         $this->app->bind('GuzzleHttp\ClientInterface', function () use ($testClient) {
             return $testClient;
         });
-        
-        $response = $this->post(route('domains.store'), $domain);
-        $response->seeInDatabase('domains', $domain);
+        $response = $this->post(route('domains.store'), ['name' => $domain->name]);
         $this->assertResponseStatus(302);
+        $response->seeInDatabase('domains', ['body' => $domain->body]);
     }
 
     public function testShow()
     {
-        $faker = \Faker\Factory::create();
-        $domainName = $faker->domainName;
-        \DB::table('domains')->insert(['name' => $domainName]);
-        $response = $this->get(route('domains.show', ['id' => 1]));
-        $response->seeInDatabase('domains', ['name' => $domainName]);
+        $domain = factory(Domain::class)->make();
+        $domain->save();
+        $testDomain = Domain::where('name', $domain->name)->first();
+        $response = $this->get(route('domains.show', ['id' => $testDomain->id]));
         $this->assertResponseOk();
+        $response->seeInDatabase('domains', ['name' => $domain->name]);
     }
 }

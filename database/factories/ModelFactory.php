@@ -18,9 +18,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define('domains', function (Faker\Generator $faker) {
+$factory->define(App\Domain::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->email,
+        'name' => $faker->domainName,
+        'body' =>
+            "<meta name=\"keywords\" content=\"{$faker->words($nb = 3, $asText = true)}\">" .
+            "<meta name=\"description\" content=\"{$faker->text($maxNbChars = 200)}\">" .
+            "<h1>{$faker->paragraph()}</h1>"
     ];
 });

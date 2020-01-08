@@ -6,12 +6,12 @@ use Psr\Http\Message\RequestInterface;
 
 class TestClient implements \GuzzleHttp\ClientInterface
 {
-    private $domain;
+    private $body;
     private $statusCode = 200;
 
-    public function __construct($domain)
+    public function __construct($body)
     {
-        $this->domain = $domain;
+        $this->body = $body;
     }
     
     public function sendAsync(RequestInterface $request, array $options = [])
@@ -28,7 +28,7 @@ class TestClient implements \GuzzleHttp\ClientInterface
     
     public function request($method, $uri = '', array $options = [])
     {
-        return new TestClient($this->domain);
+        return new TestClient($this->body);
     }
     
     public function getConfig($option = null)
@@ -47,16 +47,17 @@ class TestClient implements \GuzzleHttp\ClientInterface
 
     public function getContents()
     {
-        return $this->domain['body'];
+        return $this->body;
     }
 
     public function getBody()
     {
-        return new TestClient($this->domain);
+        return new TestClient($this->body);
     }
 
     public function getHeaders()
     {
-        return ['Content-Length' => strlen($this->domain['body'])];
+        $utf8Body = iconv(mb_detect_encoding($this->body), "UTF-8//TRANSLIT", $this->body);
+        return ['Content-Length' => mb_strlen($utf8Body, 'UTF-8')];
     }
 }
