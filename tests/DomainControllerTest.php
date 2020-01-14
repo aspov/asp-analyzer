@@ -16,7 +16,7 @@ class DomainControllerTest extends TestCase
         $domain = factory(Domain::class)->make();
         $domain->save();
         $testDomain = Domain::where('name', $domain->name)->first();
-        $response = $this->get(route('domains.index', ['id' => $testDomain->id]));
+        $response = $this->get(route('domains.index'));
         $this->assertResponseOk();
         $response->seeInDatabase('domains', ['name' => $domain->name]);
     }

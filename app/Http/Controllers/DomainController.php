@@ -18,8 +18,8 @@ class DomainController extends Controller
 
     public function index(Request $request)
     {
-        $domains =  Domain::paginate(2);
-        return view('domain.index', ['domains' => $domains]);
+        $domains = Domain::paginate(2);
+        return view('domain.index', compact('domains'));
     }
 
     public function store(Request $request)
@@ -39,7 +39,7 @@ class DomainController extends Controller
         } catch (\Exception $e) {
             return view('page.main', ['domain' => $request->name, 'error' => $e->getMessage()]);
         }
-        $domain = Domain::where('name', $request->name)->first() ?? new Domain();
+        $domain = Domain::firstOrNew(['name' => $request->name]);
         $domain->name = $request->name;
         $domain->status_code = $statusCode;
         $domain->content_length = $contentLength;
@@ -48,16 +48,20 @@ class DomainController extends Controller
         $domain->description = $description ? $description[0]->attr('content') : null;
         $domain->heading = $heading ? $heading[0]->text() : null;
         $domain->save();
-        return redirect()->route('domains.show', ['id' => $domain->id]);
+        return redirect()->route('domains.show', ['id' => $domain]);
+        //return redirect()->route('domains.show', [$domain]);
+        //return redirect()->route('domains.show', compact('domain'));
+        //return redirect()->route('domains.show', $domain);
+        //не работают, не хочет связывать id модели с id в route
+        //в терминале ошибка #127.0.0.1:43062 [404]: /domains/%7Bid%7D?0=1
+        //в логах
+        //(2/2) NotFoundHttpException
+        //No query results for model [App\Domain] %7Bid%7D
     }
 
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        try {
-            $domain = Domain::findOrFail($id);
-        } catch (\Exception $e) {
-            return view('page.main', ['error' => $e->getMessage()]);
-        }
-        return view('domain.show', ['domain' => $domain]);
+        $domain = Domain::findOrFail($id);
+        return view('domain.show', compact('domain'));
     }
 }
