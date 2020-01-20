@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['request' => app()->request])
 @section('content')
 <div class="container mw-100 shadow-sm">
   <div class="row border-bottom">

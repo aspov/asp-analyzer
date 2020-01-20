@@ -37,7 +37,7 @@ class DomainController extends Controller
             $description = $document->find('meta[name="description"]');
             $heading = $document->find('h1');
         } catch (\Exception $e) {
-            return view('page.main', ['domain' => $request->name, 'error' => $e->getMessage()]);
+            return view('page.main', ['request' => $request, 'error' => $e->getMessage()]);
         }
         $domain = Domain::firstOrNew(['name' => $request->name]);
         $domain->name = $request->name;
@@ -49,14 +49,6 @@ class DomainController extends Controller
         $domain->heading = $heading ? $heading[0]->text() : null;
         $domain->save();
         return redirect()->route('domains.show', ['id' => $domain]);
-        //return redirect()->route('domains.show', [$domain]);
-        //return redirect()->route('domains.show', compact('domain'));
-        //return redirect()->route('domains.show', $domain);
-        //не работают, не хочет связывать id модели с id в route
-        //в терминале ошибка #127.0.0.1:43062 [404]: /domains/%7Bid%7D?0=1
-        //в логах
-        //(2/2) NotFoundHttpException
-        //No query results for model [App\Domain] %7Bid%7D
     }
 
     public function show($id)

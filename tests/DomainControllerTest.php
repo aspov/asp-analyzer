@@ -13,9 +13,7 @@ class DomainControllerTest extends TestCase
   
     public function testIndex()
     {
-        $domain = factory(Domain::class)->make();
-        $domain->save();
-        $testDomain = Domain::where('name', $domain->name)->first();
+        $domain = factory(Domain::class)->create();
         $response = $this->get(route('domains.index'));
         $this->assertResponseOk();
         $response->seeInDatabase('domains', ['name' => $domain->name]);
@@ -23,22 +21,19 @@ class DomainControllerTest extends TestCase
 
     public function testStore()
     {
-        $domain = factory(Domain::class)->make();
+        $domain = factory(Domain::class)->create();
         $testClient = new TestClient($domain->body);
         $this->app->bind('GuzzleHttp\ClientInterface', function () use ($testClient) {
             return $testClient;
         });
         $response = $this->post(route('domains.store'), ['name' => $domain->name]);
-        $this->assertResponseStatus(302);
         $response->seeInDatabase('domains', ['body' => $domain->body]);
     }
 
     public function testShow()
     {
-        $domain = factory(Domain::class)->make();
-        $domain->save();
-        $testDomain = Domain::where('name', $domain->name)->first();
-        $response = $this->get(route('domains.show', ['id' => $testDomain->id]));
+        $domain = factory(Domain::class)->create();
+        $response = $this->get(route('domains.show', ['id' => $domain]));
         $this->assertResponseOk();
         $response->seeInDatabase('domains', ['name' => $domain->name]);
     }
