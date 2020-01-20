@@ -1,4 +1,4 @@
-@extends('layouts.app', ['request' => app()->request])
+@extends('layouts.app')
 @section('content')
 <div class="jumbotron">
   <p>Here you can analyze the domains</p>  

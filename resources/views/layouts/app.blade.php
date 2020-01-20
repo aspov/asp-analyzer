@@ -13,10 +13,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">  
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item {{ $request->is('/') ? 'active' : '' }}">
+      <li class="nav-item {{ app()->request->is('/') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('page.main') }}">Main </a>
       </li>
-      <li class="nav-item {{ $request->is('domains') ? 'active' : '' }}">
+      <li class="nav-item {{ app()->request->is('domains') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('domains.index') }}">Domains</a>
       </li>      
   </div>
