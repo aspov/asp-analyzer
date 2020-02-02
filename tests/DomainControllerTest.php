@@ -27,6 +27,7 @@ class DomainControllerTest extends TestCase
             return $testClient;
         });
         $response = $this->post(route('domains.store'), ['name' => $domain->name]);
+        $this->assertResponseStatus(302);
         $response->seeInDatabase('domains', ['body' => $domain->body]);
     }
 
